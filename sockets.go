@@ -26,7 +26,6 @@ import (
 	"net/http"
 	"os"
 	"reflect"
-	"regexp"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -687,10 +686,6 @@ func upgradeRequest(resp http.ResponseWriter, req *http.Request, o *Options) (*w
 	if req.Method != "GET" {
 		o.log("Method %s is not allowed", LEVEL_WARNING, req.RemoteAddr, req.Method)
 		return nil, http.StatusMethodNotAllowed, errors.New("Method not allowed")
-	}
-	if r, err := regexp.MatchString("https?://"+req.Host+"$", req.Header.Get("Origin")); !r || err != nil {
-		o.log("Origin %s is not allowed", LEVEL_WARNING, req.RemoteAddr, req.Host)
-		return nil, http.StatusForbidden, errors.New("Origin not allowed")
 	}
 
 	o.log("Request to %s has been allowed for origin %s", LEVEL_DEBUG, req.RemoteAddr, req.Host, req.Header.Get("Origin"))
